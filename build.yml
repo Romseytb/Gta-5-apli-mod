@@ -1,0 +1,45 @@
+name: Construire GTA-Mods-Manager-Setup.exe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Tests automatiques
+        run: dotnet test GtaModsManager.Tests.csproj -c Release --logger "trx;LogFileName=resultats.trx" --results-directory TestResults
+
+      - name: Compiler l'application
+        run: dotnet publish GtaModsManager.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o publish
+
+      - name: Installer Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Construire l'installateur
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss'
+
+      - name: Résultats des tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultats-des-tests
+          path: TestResults/
+
+      - name: Publier GTA-Mods-Manager-Setup.exe (onglet Releases)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: GTA Mods Manager 1.0.${{ github.run_number }}
+          files: dist/GTA-Mods-Manager-Setup.exe

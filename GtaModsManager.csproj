@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>GtaModsManager</AssemblyName>
+    <RootNamespace>GtaModsManager</RootNamespace>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <Version>1.0.0</Version>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Models.cs;PathGuard.cs;SafeZip.cs;AppPaths.cs;GameLocator.cs;ModAnalyzer.cs;Planner.cs;Installer.cs;Report.cs;MainForm.cs;Program.cs" />
+  </ItemGroup>
+</Project>
